@@ -59,8 +59,9 @@ function arg(name, def) {
   console.log('  Signed by    :', payload.xat?.signedBy, '(' + payload.xat?.alg + ')');
   if (payload.settlement) console.log('  Settlement tx:', payload.settlement.transactionId);
 
-  console.log('\nToken comparison:');
-  console.log('  Naive 30-tool MCP payment server : ~55,000 tokens / payment');
-  console.log(`  agentpass-demo-mcp               : ~${Math.round(schemaBytes/4) + 160} tokens / payment`);
+  console.log('\nToken-floor comparison (see ./benchmark for measurement):');
+  console.log('  Naive 30-tool payment MCP   : 3,705 tokens schema floor');
+  console.log(`  agentpass-demo-mcp          :   230 tokens schema floor`);
+  console.log('  Ratio                       :  16.1x smaller');
   console.log('');
 })();

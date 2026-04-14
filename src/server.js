@@ -4,7 +4,9 @@
  *
  * A minimal MCP server that exposes ONE tool -- agentpass_pay -- so any
  * MCP host (Claude Desktop, Cursor, Cline, Zed, ...) can make a paid
- * x402 call with ~180 tokens of schema floor instead of 55,000.
+ * x402 call with 230 tokens of schema floor instead of 3,705 (a realistic
+ * 30-tool payment MCP). Measured with tiktoken cl100k_base. See
+ * ./benchmark for the reproducible comparison.
  *
  * This demo talks to the hosted AgentPass API at https://agentpass.co.uk
  * so you can clone-and-run it with zero licence keys. For production
@@ -29,8 +31,10 @@ const AGENT_ID = process.env.AGENTPASS_AGENT_ID || 'trusted';
 const SERVER_NAME = 'agentpass-demo-mcp';
 const SERVER_VERSION = '1.0.0';
 
-// The ONE tool. ~180 tokens on the wire. Replaces 30-tool MCP payment
-// servers that burn 55,000 tokens of schema floor on every request.
+// The ONE tool. 230 tokens on the wire. Replaces a realistic 30-tool
+// MCP payment surface that burns 3,705 tokens of schema floor on every
+// request -- 16x more -- and roughly 48x more across a real multi-hop
+// flow (quote -> confirm -> capture).
 const AGENTPASS_TOOL = {
   name: 'agentpass_pay',
   description:

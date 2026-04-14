@@ -1,25 +1,31 @@
-# The agent-payment MCP without the 55,000-token tax
+# 30 tools vs 1: the agent-payment MCP token-floor benchmark
 
-A minimal MCP server that exposes **one tool** — `agentpass_pay` — so any MCP host (Claude Desktop, Cursor, Cline, Zed, etc.) can have its agent make a paid x402 / Stripe / AP2 / Mastercard / Visa TAP call with **~180 tokens of schema floor instead of 55,000**.
+A minimal MCP server that exposes **one tool** — `agentpass_pay` — so any MCP host (Claude Desktop, Cursor, Cline, Zed, etc.) can have its agent make a paid x402 / Stripe / AP2 / Mastercard / Visa TAP call with **230 tokens of schema floor instead of 3,705**.
 
-Clone it. Run it. See it work.
+Clone it. Run it. See it work. Reproduce the measurement in [`benchmark/`](./benchmark).
 
-## The token-tax problem in one picture
+## Measured numbers (tiktoken cl100k_base, 14 Apr 2026)
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│ Naive 30-tool MCP payment server                                 │
-│   tools: quote, authorize, capture, refund, dispute, webhook,    │
-│          reconcile, payout, subscribe, ...  (×30)                │
-│   schema floor per request: ~55,000 tokens                       │
-│   cost at 1,000 payments/day, Claude Sonnet ~$3/MTok: ~$4,950/mo │
+│ Naive 30-tool payment MCP (realistic Stripe-shaped surface)      │
+│   tools: create_quote, confirm_payment_intent, capture,          │
+│          refund, dispute, customer CRUD, transfer, payout,       │
+│          subscription, webhook_verify, sanctions, KYC,           │
+│          velocity, risk, flag review ... (30 total)              │
+│                                                                  │
+│   Schema floor per request : 3,705 tokens                        │
+│   Cost (1,000 req/day, Sonnet)  : $333 / month                   │
+│   Cost (1,000 req/day, Opus)    : $1,667 / month                 │
 └──────────────────────────────────────────────────────────────────┘
                                ⬇
 ┌──────────────────────────────────────────────────────────────────┐
 │ agentpass-demo-mcp (this repo)                                   │
 │   tools: agentpass_pay(rail, to, amount, currency)               │
-│   schema floor per request: ~180 tokens                          │
-│   cost at the same volume: ~$32/mo                               │
+│                                                                  │
+│   Schema floor per request : 230 tokens                          │
+│   Cost (1,000 req/day, Sonnet)  : $21 / month                    │
+│   Cost (1,000 req/day, Opus)    : $104 / month                   │
 │                                                                  │
 │   Every call is:                                                 │
 │     ✓ signed locally with x-agent-trust (ECDSA P-256)            │
@@ -29,7 +35,10 @@ Clone it. Run it. See it work.
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-**~150× token reduction. One install. No protocol change.**
+**Schema floor: 16.1× smaller.**
+**Effective advantage at payment-flow level: ~48×** (multi-hop flows like quote → confirm → capture re-inject the schema three times on the 30-tool server — 11,115 tokens — but settle in one call here).
+
+All figures reproducible — see [`benchmark/`](./benchmark).
 
 ## What you'll see
 
@@ -96,7 +105,7 @@ The second one will be blocked with a detailed sanctions match.
 
 ## How the token floor stays tiny
 
-Every MCP tool the model can see eats tokens on every single request (schemas are re-injected). The more tools, the higher the floor. Naive payment MCPs expose 30+ tools (one per REST verb); that's the 55,000-token problem.
+Every MCP tool the model can see eats tokens on every single request (schemas are re-injected). The more tools, the higher the floor. Naive payment MCPs expose 25–35 tools (one per REST verb). We measured a realistic 30-tool payment surface at **3,705 tokens**. The 55,000-token figure you may have seen in Valley discourse is from Anthropic's 93-tool GitHub MCP, not a payment MCP — see [`benchmark/`](./benchmark) for the honest numbers.
 
 We collapse every payment branch (quote, authorize, capture, refund, dispute, etc.) into **one** high-intent tool:
 

@@ -1,7 +1,7 @@
 {
   "name": "agentpass-demo-mcp",
   "version": "1.0.0",
-  "description": "The agent-payment MCP without the 55,000-token tax. A minimal MCP server that exposes one tool (agentpass_pay) for signed, sanctions-screened, trust-gated payments across x402, Stripe, AP2, MPP, Mastercard Agent Pay, Visa TAP, ACP, and L402.",
+  "description": "30 tools vs 1: an agent-payment MCP that measures 230 tokens of schema floor instead of 3,705 (16x smaller; ~48x effective across a multi-hop payment flow). Signed, sanctions-screened, trust-gated payments across x402, Stripe, AP2, MPP, Mastercard Agent Pay, Visa TAP, ACP, and L402.",
   "main": "src/server.js",
   "bin": {
     "agentpass-demo-mcp": "src/server.js"
