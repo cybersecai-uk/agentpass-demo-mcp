@@ -1,0 +1,55 @@
+{
+  "name": "agentpass-demo-mcp",
+  "version": "1.0.0",
+  "description": "The agent-payment MCP without the 55,000-token tax. A minimal MCP server that exposes one tool (agentpass_pay) for signed, sanctions-screened, trust-gated payments across x402, Stripe, AP2, MPP, Mastercard Agent Pay, Visa TAP, ACP, and L402.",
+  "main": "src/server.js",
+  "bin": {
+    "agentpass-demo-mcp": "src/server.js"
+  },
+  "files": [
+    "src/",
+    "examples/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node src/server.js",
+    "demo": "node examples/cli-demo.js",
+    "test": "node test/handler.test.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "agent-payments",
+    "agentpass",
+    "x-agent-trust",
+    "x402",
+    "stripe",
+    "ap2",
+    "acp",
+    "mpp",
+    "mastercard-agent-pay",
+    "visa-tap",
+    "l402",
+    "claude-desktop",
+    "cursor",
+    "cline",
+    "token-efficiency",
+    "demo"
+  ],
+  "author": "CyberSecAI Ltd",
+  "license": "Apache-2.0",
+  "homepage": "https://agentpass.co.uk/rails",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cybersecai-uk/agentpass-demo-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cybersecai-uk/agentpass-demo-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

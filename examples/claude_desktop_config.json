@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "agentpass-demo": {
+      "command": "node",
+      "args": ["/absolute/path/to/agentpass-demo-mcp/src/server.js"],
+      "env": {
+        "AGENTPASS_AGENT_ID": "trusted"
+      }
+    }
+  }
+}
